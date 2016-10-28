@@ -15,7 +15,6 @@ server:
   port: 80
   # We need to use a diferent context path to avoid cookie collision in development when don't use different server names
   contextPath: /
-logging.config: classpath:logback-production.xml
 
 ---
 
@@ -27,6 +26,7 @@ spring:
     dbname: set dbname property via env variable
     username: set username property via env variable
     password: set password property via env variable
+logging.config: classpath:logback-production.xml
 
 ---
 
