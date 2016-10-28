@@ -1,0 +1,36 @@
+<settings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+                          https://maven.apache.org/xsd/settings-1.0.0.xsd">
+    <activeProfiles>${spring.profiles.active}</activeProfiles>
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <unit.skip>true</unit.skip>
+                <int.skip>true</int.skip>
+                <docker.skip>true</docker.skip>
+            </properties>
+        </profile>
+        <profile>
+            <id>int</id>
+            <properties>
+                <unit.skip>false</unit.skip>
+                <int.skip>false</int.skip>
+                <docker.skip>true</docker.skip>
+            </properties>
+        </profile>
+        <profile>
+            <id>uat</id>
+            <properties>
+
+            </properties>
+        </profile>
+        <profile>
+            <id>pro</id>
+            <properties>
+
+            </properties>
+        </profile>
+    </profiles>
+</settings>

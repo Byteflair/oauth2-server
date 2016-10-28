@@ -1,0 +1,57 @@
+spring:
+  jpa:
+    database: MYSQL
+    show-sql: false
+    generate-ddl: false
+  datasource:
+    initialize: false
+    platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    url: jdbc:mysql://${spring.datasource.host}:${spring.datasource.port}/${spring.datasource.dbname}?autoReconnect=true&useUnicode=true&characterEncoding=utf8&noAccessToProcedureBodies=true&protocol=tcp
+    driver-class-name: com.mysql.jdbc.Driver
+  data.rest:
+    returnBodyOnCreate: true
+    returnBodyOnupdate: true
+server:
+  port: 80
+  # We need to use a diferent context path to avoid cookie collision in development when don't use different server names
+  contextPath: /
+logging.config: classpath:logback-production.xml
+
+---
+
+spring:
+  profiles: pro
+  datasource:
+    host: set host property via env variable
+    port: set port property via env variable
+    dbname: set dbname property via env variable
+    username: set username property via env variable
+    password: set password property via env variable
+
+---
+
+spring:
+  profiles: dev
+  jpa:
+    show-sql: true
+  datasource:
+    #esto solo queremos que ocurra en test. Ejecuta schema.sql y data.sql
+    initialize: true
+    host: localhost
+    port: 3306
+    dbname: oauth_db
+    username: oauth_server
+    password: password
+keystore:
+  path: classpath:keystore.jks
+  password: password
+  key:
+    alias: dev_oauth_jwt_key
+    password: password
+server.port: 8080
+logging:
+  config: classpath:logback-development.xml
+  level:
+    com.gpsauriga.sso: DEBUG
+    org.springframework.security: DEBUG
+security.user.password: password
