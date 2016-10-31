@@ -40,9 +40,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private CustomUserDetailsService customUserDetailsService;
 
     @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
     public void globalUserDetails(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(customUserDetailsService).passwordEncoder(passwordEncoder);
     }
