@@ -43,7 +43,7 @@ spring:
     username: oauth_server
     password: password
 keystore:
-  path: classpath:keystore.jks
+  path: @keystore.path@
   password: password
   key:
     alias: dev_oauth_jwt_key
@@ -54,4 +54,3 @@ logging:
   level:
     com.gpsauriga.sso: DEBUG
     org.springframework.security: DEBUG
-security.user.password: password

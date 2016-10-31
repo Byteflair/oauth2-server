@@ -25,19 +25,79 @@
         <java.version>1.8</java.version>
         <spring-security.version>4.1.3.RELEASE</spring-security.version>
         <sonar.version>2.7.1</sonar.version>
+        <spock.version>1.1-groovy-2.4-rc-2</spock.version>
         <unit.skip>false</unit.skip>
         <int.skip>false</int.skip>
         <docker.skip>false</docker.skip>
     </properties>
 
     <profiles>
-
+        <profile>
+            <id>dev</id>
+            <activation>
+                <property>
+                    <name>spring.profiles.active</name>
+                    <value>dev</value>
+                </property>
+            </activation>
+            <properties>
+                <unit.skip>false</unit.skip>
+                <int.skip>false</int.skip>
+                <docker.skip>false</docker.skip>
+                <keystore.path>${project.build.directory}/keystore.jks</keystore.path>
+            </properties>
+        </profile>
+        <profile>
+            <id>int</id>
+            <activation>
+                <property>
+                    <name>spring.profiles.active</name>
+                    <value>int</value>
+                </property>
+            </activation>
+            <properties>
+                <unit.skip>false</unit.skip>
+                <int.skip>false</int.skip>
+                <docker.skip>true</docker.skip>
+                <keystore.path>${project.build.directory}/keystore.jks</keystore.path>
+            </properties>
+        </profile>
+        <profile>
+            <id>uat</id>
+            <activation>
+                <property>
+                    <name>spring.profiles.active</name>
+                    <value>uat</value>
+                </property>
+            </activation>
+            <properties>
+                <unit.skip>false</unit.skip>
+                <int.skip>false</int.skip>
+                <docker.skip>true</docker.skip>
+                <keystore.path>${project.build.directory}/keystore.jks</keystore.path>
+            </properties>
+        </profile>
+        <profile>
+            <id>pro</id>
+            <activation>
+                <property>
+                    <name>spring.profiles.active</name>
+                    <value>pro</value>
+                </property>
+            </activation>
+            <properties>
+                <unit.skip>false</unit.skip>
+                <int.skip>false</int.skip>
+                <docker.skip>true</docker.skip>
+                <keystore.path>${project.build.directory}/keystore.jks</keystore.path>
+            </properties>
+        </profile>
     </profiles>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.3.6.RELEASE</version>
+        <version>1.4.0.RELEASE</version>
     </parent>
 
     <build>
@@ -55,7 +115,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <keystore>${project.basedir}/src/main/resources/keystore.jks</keystore>
+                    <keystore>${keystore.path}</keystore>
                     <dname>OU=Development, O=Byteflair, L=Madrid S=Madrid, C=Spain</dname>
                     <keyalg>rsa</keyalg>
                     <storepass>password</storepass>
