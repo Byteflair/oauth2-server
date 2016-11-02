@@ -33,6 +33,139 @@
 
     <profiles>
         <profile>
+            <id>mysql</id>
+            <activation>
+                <property>
+                    <name>spring.profiles.active</name>
+                    <value>mysql</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>io.fabric8</groupId>
+                        <artifactId>docker-maven-plugin</artifactId>
+                        <version>0.15.16</version>
+                        <configuration>
+                            <images>
+                                <image>
+                                    <!--docker  run &#x002d;&#x002d;name mensosdb -p 27017:27017 -d mongo:3.0.8-->
+                                    <alias>oauthdb</alias>
+                                    <name>mysql:5.5</name>
+                                    <run>
+                                        <env>
+                                            <MYSQL_ROOT_PASSWORD>password</MYSQL_ROOT_PASSWORD>
+                                            <MYSQL_USER>oauth_server</MYSQL_USER>
+                                            <MYSQL_PASSWORD>password</MYSQL_PASSWORD>
+                                            <MYSQL_DATABASE>oauth_db</MYSQL_DATABASE>
+                                        </env>
+                                        <ports>
+                                            <port>3306:3306</port>
+                                        </ports>
+                                        <wait>
+                                            <log>mysqld: ready for connections.</log>
+                                            <time>20000</time>
+                                        </wait>
+                                    </run>
+                                </image>
+                            </images>
+                            <skip>${docker.skip}</skip>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>start-containers</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>build</goal>
+                                    <goal>start</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>stop-containers</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>stop</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+            <dependencies>
+                <dependency>
+                    <groupId>mysql</groupId>
+                    <artifactId>mysql-connector-java</artifactId>
+                    <version>5.1.36</version>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>postgresql</id>
+            <activation>
+                <property>
+                    <name>spring.profiles.active</name>
+                    <value>postgresql</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>io.fabric8</groupId>
+                        <artifactId>docker-maven-plugin</artifactId>
+                        <version>0.15.16</version>
+                        <configuration>
+                            <images>
+                                <image>
+                                    <!--docker  run &#x002d;&#x002d;name mensosdb -p 27017:27017 -d mongo:3.0.8-->
+                                    <alias>oauthdb</alias>
+                                    <name>postgres:9.5</name>
+                                    <run>
+                                        <env>
+                                            <POSTGRES_USER>oauth_server</POSTGRES_USER>
+                                            <POSTGRES_PASSWORD>password</POSTGRES_PASSWORD>
+                                            <POSTGRES_DB>oauth_db</POSTGRES_DB>
+                                        </env>
+                                        <ports>
+                                            <port>5432:5432</port>
+                                        </ports>
+                                        <wait>
+                                            <log>database system is ready to accept connections</log>
+                                            <time>20000</time>
+                                        </wait>
+                                    </run>
+                                </image>
+                            </images>
+                            <skip>${docker.skip}</skip>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>start-containers</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>build</goal>
+                                    <goal>start</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>stop-containers</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>stop</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+            <dependencies>
+                <dependency>
+                    <groupId>org.postgresql</groupId>
+                    <artifactId>postgresql</artifactId>
+                    <version>9.4.1211</version>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
             <id>dev</id>
             <activation>
                 <property>
@@ -205,53 +338,6 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>io.fabric8</groupId>
-                <artifactId>docker-maven-plugin</artifactId>
-                <version>0.15.16</version>
-                <configuration>
-                    <images>
-                        <image>
-                            <!--docker  run &#x002d;&#x002d;name mensosdb -p 27017:27017 -d mongo:3.0.8-->
-                            <alias>oauthdb</alias>
-                            <name>mysql:5.5</name>
-                            <run>
-                                <env>
-                                    <MYSQL_ROOT_PASSWORD>password</MYSQL_ROOT_PASSWORD>
-                                    <MYSQL_USER>oauth_server</MYSQL_USER>
-                                    <MYSQL_PASSWORD>password</MYSQL_PASSWORD>
-                                    <MYSQL_DATABASE>oauth_db</MYSQL_DATABASE>
-                                </env>
-                                <ports>
-                                    <port>3306:3306</port>
-                                </ports>
-                                <wait>
-                                    <log>mysqld: ready for connections.</log>
-                                    <time>20000</time>
-                                </wait>
-                            </run>
-                        </image>
-                    </images>
-                    <skip>${docker.skip}</skip>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>start-containers</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>build</goal>
-                            <goal>start</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>stop-containers</id>
-                        <phase>post-integration-test</phase>
-                        <goals>
-                            <goal>stop</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.7.2.201409121644</version>
@@ -362,11 +448,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.36</version>
         </dependency>
         <dependency>
             <groupId>io.rest-assured</groupId>
