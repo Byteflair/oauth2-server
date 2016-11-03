@@ -5,9 +5,8 @@ spring:
     generate-ddl: false
   datasource:
     initialize: false
-    platform: org.hibernate.dialect.MySQL5InnoDBDialect
-    url: jdbc:mysql://${spring.datasource.host}:${spring.datasource.port}/${spring.datasource.dbname}?autoReconnect=true&useUnicode=true&characterEncoding=utf8&noAccessToProcedureBodies=true&protocol=tcp
-    driver-class-name: com.mysql.jdbc.Driver
+    schema: schema-${spring.datasource.platform}.sql
+    data: data-${spring.datasource.platform}.sql
   data.rest:
     returnBodyOnCreate: true
     returnBodyOnupdate: true
@@ -15,6 +14,26 @@ server:
   port: 80
   # We need to use a diferent context path to avoid cookie collision in development when don't use different server names
   contextPath: /
+
+---
+
+spring:
+  profiles: mysql
+  datasource:
+    port: 3306
+    platform: mysql
+    url: jdbc:mysql://${spring.datasource.host}:${spring.datasource.port}/${spring.datasource.dbname}?autoReconnect=true&useUnicode=true&characterEncoding=utf8&noAccessToProcedureBodies=true&protocol=tcp
+    driver-class-name: com.mysql.jdbc.Driver
+
+---
+
+spring:
+  profiles: postgresql
+  datasource:
+    port: 5432
+    platform: postgresql
+    url: jdbc:postgresql://${spring.datasource.host}:${spring.datasource.port}/${spring.datasource.dbname}?autoReconnect=true&useUnicode=true&characterEncoding=utf8&noAccessToProcedureBodies=true&protocol=tcp
+    driver-class-name: org.postgresql.Driver
 
 ---
 
@@ -35,10 +54,9 @@ spring:
   jpa:
     show-sql: true
   datasource:
-    #esto solo queremos que ocurra en test. Ejecuta schema.sql y data.sql
+    #esto solo queremos que ocurra en test. Ejecuta schema-${spring.datasource.platform}.sql y data-${spring.datasource.platform}.sql
     initialize: true
     host: localhost
-    port: 3306
     dbname: oauth_db
     username: oauth_server
     password: password
