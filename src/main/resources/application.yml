@@ -43,7 +43,7 @@ spring:
     username: oauth_server
     password: password
 keystore:
-  path: @keystore.path@
+  path: classpath:keystore.jks
   password: password
   key:
     alias: dev_oauth_jwt_key
