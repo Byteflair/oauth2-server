@@ -1,6 +1,5 @@
 spring:
   jpa:
-    database: MYSQL
     show-sql: false
     generate-ddl: false
   datasource:
@@ -19,6 +18,8 @@ server:
 
 spring:
   profiles: mysql
+  jpa:
+    database: MYSQL
   datasource:
     port: 3306
     platform: mysql
@@ -29,6 +30,8 @@ spring:
 
 spring:
   profiles: postgresql
+  jpa:
+    database: POSTGRESQL
   datasource:
     port: 5432
     platform: postgresql
