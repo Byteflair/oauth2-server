@@ -4,8 +4,8 @@ spring:
     generate-ddl: false
   datasource:
     initialize: false
-    schema: schema-${spring.datasource.platform}.sql
-    data: data-${spring.datasource.platform}.sql
+    ##schema: schema-${spring.datasource.platform}.sql
+    ##data: data-${spring.datasource.platform}.sql
   data.rest:
     returnBodyOnCreate: true
     returnBodyOnupdate: true
