@@ -42,6 +42,7 @@
                 </property>
             </activation>
             <build>
+                <finalName>${project.artifactId}-mysql-${project.version}</finalName>
                 <plugins>
                     <plugin>
                         <groupId>io.fabric8</groupId>
@@ -109,6 +110,7 @@
                 </property>
             </activation>
             <build>
+                <finalName>${project.artifactId}-postgresql-${project.version}</finalName>
                 <plugins>
                     <plugin>
                         <groupId>io.fabric8</groupId>
