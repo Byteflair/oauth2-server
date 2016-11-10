@@ -24,7 +24,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
-import org.springframework.security.oauth2.provider.ClientDetailsService;
+import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 import org.springframework.util.ResourceUtils;
 
@@ -50,10 +50,6 @@ public class OAuth2AuthorizationConfig extends AuthorizationServerConfigurerAdap
 
     @Autowired
     private DataSource dataSource;
-
-    @Autowired
-    private ClientDetailsService clientDetailsService;
-
     @Autowired
     private AuthenticationManager authenticationManager;
 
@@ -73,13 +69,19 @@ public class OAuth2AuthorizationConfig extends AuthorizationServerConfigurerAdap
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        clients.jdbc(dataSource);
+        clients.withClientDetails(jdbcClientDetailsService());
+    }
+
+    @Bean
+    public JdbcClientDetailsService jdbcClientDetailsService() {
+        return new JdbcClientDetailsService(dataSource);
     }
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         endpoints.authenticationManager(authenticationManager)
-                 .accessTokenConverter(customUserDetailsJwtTokenConverter());
+                 .accessTokenConverter(customUserDetailsJwtTokenConverter())
+                 .setClientDetailsService(jdbcClientDetailsService());
     }
 
     @Bean
@@ -89,6 +91,7 @@ public class OAuth2AuthorizationConfig extends AuthorizationServerConfigurerAdap
                                                  keystorePassword.toCharArray())
             .getKeyPair(keystoreKeyAlias, keystoreKeyPassword.toCharArray());
         converter.setKeyPair(keyPair);
+        converter.setClientDetailsService(jdbcClientDetailsService());
         return converter;
     }
 }

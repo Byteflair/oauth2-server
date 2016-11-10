@@ -14,7 +14,9 @@ import org.springframework.security.jwt.JwtHelper;
 import org.springframework.security.oauth2.common.*;
 import org.springframework.security.oauth2.common.util.JsonParser;
 import org.springframework.security.oauth2.common.util.JsonParserFactory;
+import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
 import org.springframework.security.oauth2.provider.token.AccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
@@ -29,6 +31,7 @@ import java.util.Map;
 public class CustomUserDetailsJwtTokenConverter extends JwtAccessTokenConverter implements TokenEnhancer, AccessTokenConverter {
 
     private JsonParser objectMapper = JsonParserFactory.create();
+    private JdbcClientDetailsService clientDetailsService;
 
     @Override
     public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
@@ -41,7 +44,7 @@ public class CustomUserDetailsJwtTokenConverter extends JwtAccessTokenConverter 
             tokenId = (String) info.get("jti");
         }
 
-        if (authentication.getPrincipal().getClass() == CustomUserDetails.class) {
+        if (!authentication.isClientOnly()) {
             CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
             info.put("systemId", customUserDetails.getSystemId());
             info.put("name", customUserDetails.getName());
@@ -59,6 +62,11 @@ public class CustomUserDetailsJwtTokenConverter extends JwtAccessTokenConverter 
                 info.put("postalAddress", customUserDetails.getPostalAddress());
             }
             info.put("details", customUserDetails.getDetails());
+        } else {
+            ClientDetails customClientDetails = clientDetailsService.loadClientByClientId(
+                (String) authentication.getPrincipal());
+            info.put("clientId", customClientDetails.getClientId());
+            info.put("details", customClientDetails.getAdditionalInformation());
         }
 
         result.setAdditionalInformation(info);
@@ -93,5 +101,9 @@ public class CustomUserDetailsJwtTokenConverter extends JwtAccessTokenConverter 
         }
 
         return result;
+    }
+
+    public void setClientDetailsService(JdbcClientDetailsService clientDetailsService) {
+        this.clientDetailsService = clientDetailsService;
     }
 }
