@@ -9,6 +9,8 @@ spring:
   data.rest:
     returnBodyOnCreate: true
     returnBodyOnupdate: true
+keystore:
+  path: @keystore.path@
 server:
   port: 80
   # We need to use a diferent context path to avoid cookie collision in development when don't use different server names
@@ -64,7 +66,6 @@ spring:
     username: oauth_server
     password: password
 keystore:
-  path: classpath:keystore.jks
   password: password
   key:
     alias: dev_oauth_jwt_key
