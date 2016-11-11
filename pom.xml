@@ -30,6 +30,7 @@
         <unit.skip>false</unit.skip>
         <int.skip>false</int.skip>
         <docker.skip>false</docker.skip>
+        <jar.prefix>postgresql</jar.prefix> <!-- postgresql por defecto -->
     </properties>
 
     <profiles>
@@ -41,8 +42,12 @@
                     <value>mysql</value>
                 </property>
             </activation>
+            <properties>
+                <jar.prefix>mysql</jar.prefix>
+            </properties>
+
             <build>
-                <finalName>${project.artifactId}-mysql-${project.version}</finalName>
+                <finalName>${project.artifactId}-${jar.prefix}-${project.version}</finalName>
                 <plugins>
                     <plugin>
                         <groupId>io.fabric8</groupId>
@@ -109,8 +114,11 @@
                     <value>postgresql</value>
                 </property>
             </activation>
+            <properties>
+                <jar.prefix>postgresql</jar.prefix>
+            </properties>
             <build>
-                <finalName>${project.artifactId}-postgresql-${project.version}</finalName>
+                <finalName>${project.artifactId}-${jar.prefix}-${project.version}</finalName>
                 <plugins>
                     <plugin>
                         <groupId>io.fabric8</groupId>
@@ -376,6 +384,36 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>sonar-maven-plugin</artifactId>
                 <version>${sonar.version}</version>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.8.2</version>
+                <executions>
+                    <execution>
+                        <id>default-deploy</id>
+                        <phase>none</phase>
+                    </execution>
+                    <execution>
+                        <id>deploy-file-db</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>deploy-file</goal>
+                        </goals>
+                        <configuration>
+                            <file>
+                                ${project.build.directory}/${project.artifactId}-${jar.prefix}-${project.version}.jar
+                            </file>
+                            <url>file:/home/calata/.m2/repository</url> <!-- TODO cambiar por url de nexus -->
+                            <groupId>${project.groupId}</groupId>
+                            <repositoryId>byteflair-repository</repositoryId>
+                            <artifactId>${project.artifactId}</artifactId>
+                            <version>${project.version}</version>
+                            <classifier>${jar.prefix}</classifier>
+                            <packaging>jar</packaging>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
