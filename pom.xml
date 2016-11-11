@@ -26,6 +26,7 @@
         <spring-security.version>4.1.3.RELEASE</spring-security.version>
         <sonar.version>2.7.1</sonar.version>
         <spock.version>1.1-groovy-2.4-rc-2</spock.version>
+        <keystore.path>${project.build.directory}/keystore.jks</keystore.path>
         <unit.skip>false</unit.skip>
         <int.skip>false</int.skip>
         <docker.skip>false</docker.skip>
@@ -41,6 +42,7 @@
                 </property>
             </activation>
             <build>
+                <finalName>${project.artifactId}-mysql-${project.version}</finalName>
                 <plugins>
                     <plugin>
                         <groupId>io.fabric8</groupId>
@@ -108,6 +110,7 @@
                 </property>
             </activation>
             <build>
+                <finalName>${project.artifactId}-postgresql-${project.version}</finalName>
                 <plugins>
                     <plugin>
                         <groupId>io.fabric8</groupId>
@@ -376,7 +379,18 @@
             </plugin>
         </plugins>
     </build>
-
+    <distributionManagement>
+        <repository>
+            <id>byteflair</id>
+            <name>Releases</name>
+            <url>https://nexus.byteflair.com/repository/maven-releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>byteflair</id>
+            <name>Snapshot</name>
+            <url>https://nexus.byteflair.com/repository/maven-snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
 
     <dependencies>
         <dependency>
