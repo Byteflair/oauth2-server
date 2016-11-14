@@ -16,7 +16,7 @@
 
     <groupId>com.byteflair</groupId>
     <artifactId>oauth2-server</artifactId>
-    <version>2.0.0</version>
+    <version>0.1.0</version>
 
     <packaging>jar</packaging>
 
@@ -30,7 +30,7 @@
         <unit.skip>false</unit.skip>
         <int.skip>false</int.skip>
         <docker.skip>false</docker.skip>
-        <jar.prefix>postgresql</jar.prefix> <!-- postgresql por defecto -->
+        <classifier>postgresql</classifier> <!-- postgresql por defecto -->
     </properties>
 
     <profiles>
@@ -43,11 +43,11 @@
                 </property>
             </activation>
             <properties>
-                <jar.prefix>mysql</jar.prefix>
+                <classifier>mysql</classifier>
             </properties>
 
             <build>
-                <finalName>${project.artifactId}-${jar.prefix}-${project.version}</finalName>
+                <finalName>${project.artifactId}-${classifier}-${project.version}</finalName>
                 <plugins>
                     <plugin>
                         <groupId>io.fabric8</groupId>
@@ -115,10 +115,10 @@
                 </property>
             </activation>
             <properties>
-                <jar.prefix>postgresql</jar.prefix>
+                <classifier>postgresql</classifier>
             </properties>
             <build>
-                <finalName>${project.artifactId}-${jar.prefix}-${project.version}</finalName>
+                <finalName>${project.artifactId}-${classifier}-${project.version}</finalName>
                 <plugins>
                     <plugin>
                         <groupId>io.fabric8</groupId>
@@ -393,6 +393,9 @@
                     <execution>
                         <id>default-deploy</id>
                         <phase>none</phase>
+                        <configuration>
+                            <skip>true</skip>
+                        </configuration>
                     </execution>
                     <execution>
                         <id>deploy-file-db</id>
@@ -402,14 +405,15 @@
                         </goals>
                         <configuration>
                             <file>
-                                ${project.build.directory}/${project.artifactId}-${jar.prefix}-${project.version}.jar
+                                ${project.build.directory}/${project.artifactId}-${classifier}-${project.version}.jar
                             </file>
-                            <url>file:/home/calata/.m2/repository</url> <!-- TODO cambiar por url de nexus -->
+                            <url>https://nexus.byteflair.com/repository/maven-releases
+                            </url> <!-- TODO cambiar por url de nexus -->
                             <groupId>${project.groupId}</groupId>
                             <repositoryId>byteflair-repository</repositoryId>
                             <artifactId>${project.artifactId}</artifactId>
                             <version>${project.version}</version>
-                            <classifier>${jar.prefix}</classifier>
+                            <classifier>${classifier}</classifier>
                             <packaging>jar</packaging>
                         </configuration>
                     </execution>
