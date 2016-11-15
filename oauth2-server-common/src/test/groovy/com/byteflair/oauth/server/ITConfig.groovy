@@ -10,20 +10,15 @@
 
 package com.byteflair.oauth.server
 
-import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.context.annotation.Import
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer
-import org.springframework.web.bind.annotation.SessionAttributes
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
-
 /**
  * Created by Daniel Cerecedo <daniel.cerecedo@byteflair.com> on 31/10/16.
  */
-@SpringBootApplication
+/*@SpringBootApplication
 @SessionAttributes("authorizationRequest")
 @EnableResourceServer
-@Import([OAuth2AuthorizationConfig, SecurityConfig])
+@Import([OAuth2AuthorizationConfig, SecurityConfig])*/
 class ITConfig extends WebMvcConfigurerAdapter {
 
     @Override

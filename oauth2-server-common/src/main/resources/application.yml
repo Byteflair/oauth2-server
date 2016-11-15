@@ -11,35 +11,19 @@ spring:
     returnBodyOnupdate: true
 keystore:
   path: @keystore.path@
+  password: password
+  key:
+    alias: dev_oauth_jwt_key
+    password: password
 server:
-  port: 80
+  port: 8080
   # We need to use a diferent context path to avoid cookie collision in development when don't use different server names
   contextPath: /
-
----
-
-spring:
-  profiles: mysql
-  jpa:
-    database: MYSQL
-  datasource:
-    port: 3306
-    platform: mysql
-    url: jdbc:mysql://${spring.datasource.host}:${spring.datasource.port}/${spring.datasource.dbname}?autoReconnect=true&useUnicode=true&characterEncoding=utf8&noAccessToProcedureBodies=true&protocol=tcp
-    driver-class-name: com.mysql.jdbc.Driver
-
----
-
-spring:
-  profiles: postgresql
-  jpa:
-    database: POSTGRESQL
-  datasource:
-    port: 5432
-    platform: postgresql
-    url: jdbc:postgresql://${spring.datasource.host}:${spring.datasource.port}/${spring.datasource.dbname}?autoReconnect=true&useUnicode=true&characterEncoding=utf8&noAccessToProcedureBodies=true&protocol=tcp
-    driver-class-name: org.postgresql.Driver
-
+logging:
+  config: classpath:logback-development.xml
+  level:
+    com.gpsauriga.sso: DEBUG
+    org.springframework.security: DEBUG
 ---
 
 spring:
@@ -62,17 +46,7 @@ spring:
     #esto solo queremos que ocurra en test. Ejecuta schema-${spring.datasource.platform}.sql y data-${spring.datasource.platform}.sql
     initialize: true
     host: localhost
+    port: 5432
     dbname: oauth_db
     username: oauth_server
     password: password
-keystore:
-  password: password
-  key:
-    alias: dev_oauth_jwt_key
-    password: password
-server.port: 8080
-logging:
-  config: classpath:logback-development.xml
-  level:
-    com.gpsauriga.sso: DEBUG
-    org.springframework.security: DEBUG

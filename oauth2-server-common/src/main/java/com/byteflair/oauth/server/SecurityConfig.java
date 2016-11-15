@@ -79,7 +79,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 "/roles/**",
                 "/users/**",
                 "/user-states/**",
-                "/user-details/**").hasAuthority("ROLE_TRUSTED_CLIENT")
+                "/user-details/**",
+                "/client/**").hasAuthority("ROLE_TRUSTED_CLIENT")
             .anyRequest().authenticated();
     }
 }

@@ -18,10 +18,15 @@
     <artifactId>oauth2-server</artifactId>
     <version>0.1.0</version>
 
-    <packaging>jar</packaging>
+    <modules>
+        <module>oauth2-server-common</module>
+        <module>oauth2-server-postgresql</module>
+        <module>oauth2-server-mysql</module>
+    </modules>
+
+    <packaging>pom</packaging>
 
     <properties>
-        <start-class>com.byteflair.oauth.server.Oauth2ServerApp</start-class>
         <java.version>1.8</java.version>
         <spring-security.version>4.1.3.RELEASE</spring-security.version>
         <sonar.version>2.7.1</sonar.version>
@@ -30,152 +35,9 @@
         <unit.skip>false</unit.skip>
         <int.skip>false</int.skip>
         <docker.skip>false</docker.skip>
-        <classifier>postgresql</classifier> <!-- postgresql por defecto -->
     </properties>
 
     <profiles>
-        <profile>
-            <id>mysql</id>
-            <activation>
-                <property>
-                    <name>spring.profiles.active</name>
-                    <value>mysql</value>
-                </property>
-            </activation>
-            <properties>
-                <classifier>mysql</classifier>
-            </properties>
-
-            <build>
-                <finalName>${project.artifactId}-${classifier}-${project.version}</finalName>
-                <plugins>
-                    <plugin>
-                        <groupId>io.fabric8</groupId>
-                        <artifactId>docker-maven-plugin</artifactId>
-                        <version>0.15.16</version>
-                        <configuration>
-                            <images>
-                                <image>
-                                    <!--docker  run &#x002d;&#x002d;name mensosdb -p 27017:27017 -d mongo:3.0.8-->
-                                    <alias>oauthdb</alias>
-                                    <name>mysql:5.5</name>
-                                    <run>
-                                        <env>
-                                            <MYSQL_ROOT_PASSWORD>password</MYSQL_ROOT_PASSWORD>
-                                            <MYSQL_USER>oauth_server</MYSQL_USER>
-                                            <MYSQL_PASSWORD>password</MYSQL_PASSWORD>
-                                            <MYSQL_DATABASE>oauth_db</MYSQL_DATABASE>
-                                        </env>
-                                        <ports>
-                                            <port>3306:3306</port>
-                                        </ports>
-                                        <wait>
-                                            <log>mysqld: ready for connections.</log>
-                                            <time>20000</time>
-                                        </wait>
-                                    </run>
-                                </image>
-                            </images>
-                            <skip>${docker.skip}</skip>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>start-containers</id>
-                                <phase>pre-integration-test</phase>
-                                <goals>
-                                    <goal>build</goal>
-                                    <goal>start</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <id>stop-containers</id>
-                                <phase>post-integration-test</phase>
-                                <goals>
-                                    <goal>stop</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-            <dependencies>
-                <dependency>
-                    <groupId>mysql</groupId>
-                    <artifactId>mysql-connector-java</artifactId>
-                    <version>5.1.36</version>
-                </dependency>
-            </dependencies>
-        </profile>
-        <profile>
-            <id>postgresql</id>
-            <activation>
-                <property>
-                    <name>spring.profiles.active</name>
-                    <value>postgresql</value>
-                </property>
-            </activation>
-            <properties>
-                <classifier>postgresql</classifier>
-            </properties>
-            <build>
-                <finalName>${project.artifactId}-${classifier}-${project.version}</finalName>
-                <plugins>
-                    <plugin>
-                        <groupId>io.fabric8</groupId>
-                        <artifactId>docker-maven-plugin</artifactId>
-                        <version>0.15.16</version>
-                        <configuration>
-                            <images>
-                                <image>
-                                    <!--docker  run &#x002d;&#x002d;name mensosdb -p 27017:27017 -d mongo:3.0.8-->
-                                    <alias>oauthdb</alias>
-                                    <name>postgres:9.5</name>
-                                    <run>
-                                        <env>
-                                            <POSTGRES_USER>oauth_server</POSTGRES_USER>
-                                            <POSTGRES_PASSWORD>password</POSTGRES_PASSWORD>
-                                            <POSTGRES_DB>oauth_db</POSTGRES_DB>
-                                        </env>
-                                        <ports>
-                                            <port>5432:5432</port>
-                                        </ports>
-                                        <wait>
-                                            <log>database system is ready to accept connections</log>
-                                            <time>20000</time>
-                                        </wait>
-                                    </run>
-                                </image>
-                            </images>
-                            <skip>${docker.skip}</skip>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>start-containers</id>
-                                <phase>pre-integration-test</phase>
-                                <goals>
-                                    <goal>build</goal>
-                                    <goal>start</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <id>stop-containers</id>
-                                <phase>post-integration-test</phase>
-                                <goals>
-                                    <goal>stop</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-            <dependencies>
-                <dependency>
-                    <groupId>org.postgresql</groupId>
-                    <artifactId>postgresql</artifactId>
-                    <version>9.4.1211</version>
-                </dependency>
-            </dependencies>
-        </profile>
         <profile>
             <id>dev</id>
             <activation>
@@ -267,10 +129,6 @@
                     <alias>dev_oauth_jwt_key</alias>
                     <skipIfExist>true</skipIfExist>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
             <plugin>
                 <groupId>org.projectlombok</groupId>
@@ -384,40 +242,6 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>sonar-maven-plugin</artifactId>
                 <version>${sonar.version}</version>
-            </plugin>
-
-            <plugin>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <version>2.8.2</version>
-                <executions>
-                    <execution>
-                        <id>default-deploy</id>
-                        <phase>none</phase>
-                        <configuration>
-                            <skip>true</skip>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>deploy-file-db</id>
-                        <phase>deploy</phase>
-                        <goals>
-                            <goal>deploy-file</goal>
-                        </goals>
-                        <configuration>
-                            <file>
-                                ${project.build.directory}/${project.artifactId}-${classifier}-${project.version}.jar
-                            </file>
-                            <url>https://nexus.byteflair.com/repository/maven-releases
-                            </url> <!-- TODO cambiar por url de nexus -->
-                            <groupId>${project.groupId}</groupId>
-                            <repositoryId>byteflair-repository</repositoryId>
-                            <artifactId>${project.artifactId}</artifactId>
-                            <version>${project.version}</version>
-                            <classifier>${classifier}</classifier>
-                            <packaging>jar</packaging>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
