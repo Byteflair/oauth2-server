@@ -71,24 +71,14 @@
                         <goals>
                             <goal>repackage</goal>
                         </goals>
+                        <configuration>
+                            <mainClass>
+                                com.byteflair.oauth.server.Oauth2ServerApp
+                            </mainClass>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
-            <!--<plugin>
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.6.7</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <serverId>byteflair</serverId>
-                    <nexusUrl>https://nexus.byteflair.com/</nexusUrl>
-                    <skipStaging>true</skipStaging>
-                    <repositoryDirectory></repositoryDirectory>
-                    <tags>
-                        <javaVersion>${java.version}</javaVersion>
-                    </tags>
-                </configuration>
-            </plugin>-->
         </plugins>
     </build>
     <dependencies>
