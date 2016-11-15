@@ -70,6 +70,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <executions>
                     <execution>
+                        <id>default</id>
                         <goals>
                             <goal>repackage</goal>
                         </goals>
@@ -77,6 +78,18 @@
                             <mainClass>
                                 com.byteflair.oauth.server.Oauth2ServerApp
                             </mainClass>
+                            <layout>JAR</layout>
+                            <classifier>boot</classifier>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>deployable</id>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                        <configuration>
+                            <layout>MODULE</layout>
+                            <classifier>mvn</classifier>
                         </configuration>
                     </execution>
                 </executions>
