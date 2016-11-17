@@ -5,20 +5,20 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.client.BaseClientDetails;
 import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
-import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by calata on 10/11/16.
  */
-@Controller
+@RestController
 public class ClientController {
 
     private static final Integer ACCESS_TOKEN_VALIDITY = 900;
@@ -32,7 +32,7 @@ public class ClientController {
     PasswordEncoder passwordEncoder;
 
     @RequestMapping(method = RequestMethod.POST, value = "/client")
-    public void createNewClient(@RequestBody BaseClientDetails clientDetails) {
+    public BaseClientDetails createNewClient(@RequestBody BaseClientDetails clientDetails) {
 
         Assert.notNull(clientDetails);
         Assert.hasText(clientDetails.getClientId(), "client_id must be informed");
@@ -57,11 +57,14 @@ public class ClientController {
         }
 
         jdbcClientDetailsService.setPasswordEncoder(passwordEncoder);
-        jdbcClientDetailsService.addClientDetails(clientDetails); // TODO solucionar ViewResolver
+        jdbcClientDetailsService.addClientDetails(clientDetails);
+
+        clientDetails = (BaseClientDetails) jdbcClientDetailsService.loadClientByClientId(clientDetails.getClientId());
+        clientDetails.setClientSecret("*");
+        return clientDetails;
     }
 
-
-    /*@RequestMapping(method = RequestMethod.GET, value = "/client/{id}")
+    @RequestMapping(method = RequestMethod.GET, value = "/client/{id}")
     public BaseClientDetails getClientDetails(@PathVariable(value = "id") String id){
 
         BaseClientDetails clientDetails = null;
@@ -74,7 +77,7 @@ public class ClientController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/client")
-    public List<BaseClientDetails> getClientDetails(){
+    public List<BaseClientDetails> getAllClientDetails() {
         List<BaseClientDetails> baseClientDetails = new ArrayList<>();
         List<ClientDetails> clientDetailsList = jdbcClientDetailsService.listClientDetails();
 
@@ -88,7 +91,7 @@ public class ClientController {
 
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, value = "/client/{id}")
+    /*@RequestMapping(method = RequestMethod.DELETE, value = "/client/{id}")
     public void deleteClient(@PathVariable(value = "id") String id) {
 
         jdbcClientDetailsService.removeClientDetails(id);
