@@ -46,7 +46,6 @@ spring:
     #esto solo queremos que ocurra en test. Ejecuta schema-${spring.datasource.platform}.sql y data-${spring.datasource.platform}.sql
     initialize: true
     host: localhost
-    port: 5432
     dbname: oauth_db
     username: oauth_server
     password: password

@@ -5,7 +5,7 @@
     <parent>
         <artifactId>oauth2-server</artifactId>
         <groupId>com.byteflair</groupId>
-        <version>0.1.0</version>
+        <version>0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -73,21 +73,7 @@
                             <goal>repackage</goal>
                         </goals>
                         <configuration>
-                            <mainClass>
-                                com.byteflair.oauth.server.Oauth2ServerApp
-                            </mainClass>
-                            <layout>JAR</layout>
-                            <classifier>boot</classifier>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>deployable</id>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                        <configuration>
                             <layout>MODULE</layout>
-                            <classifier>mvn</classifier>
                         </configuration>
                     </execution>
                 </executions>
@@ -103,7 +89,7 @@
         <dependency>
             <groupId>com.byteflair</groupId>
             <artifactId>oauth2-server-common</artifactId>
-            <version>0.1.0</version>
+            <version>0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
