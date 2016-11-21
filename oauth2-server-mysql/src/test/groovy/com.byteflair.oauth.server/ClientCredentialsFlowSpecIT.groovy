@@ -8,8 +8,9 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.byteflair.oauth.server
+package com.byteflair.oauth.server.test
 
+import com.byteflair.oauth.server.ITConfig
 import groovy.util.logging.Slf4j
 import io.restassured.http.ContentType
 import org.springframework.boot.context.embedded.LocalServerPort
@@ -19,24 +20,23 @@ import spock.lang.Specification
 import spock.lang.Stepwise
 
 import static io.restassured.RestAssured.given
-
 /**
  * Created by Daniel Cerecedo <daniel.cerecedo@byteflair.com> on 31/10/16.
  */
 @SpringBootTest(classes = ITConfig.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource(properties = ['spring.profiles.active=dev',
-        'spring.jpa.database=POSTGRESQL',
+        'spring.jpa.database=MYSQL',
         'spring.jpa.show-sql=true',
         'spring.jpa.generate-ddl=false',
         'spring.datasource.initialize=true',
         'spring.datasource.host=localhost',
-        'spring.datasource.port=5432',
+        'spring.datasource.port=3306',
         'spring.datasource.dbname=oauth_db',
         'spring.datasource.username=oauth_server',
         'spring.datasource.password=password',
-        'spring.datasource.platform=postgresql',
-        'spring.datasource.url=jdbc:postgresql://${spring.datasource.host}:${spring.datasource.port}/${spring.datasource.dbname}?autoReconnect=true&useUnicode=true&characterEncoding=utf8&noAccessToProcedureBodies=true&protocol=tcp',
-        'spring.datasource.driver-class-name=org.postgresql.Driver',
+        'spring.datasource.platform=mysql',
+        'spring.datasource.url=jdbc:mysql://${spring.datasource.host}:${spring.datasource.port}/${spring.datasource.dbname}?autoReconnect=true&useUnicode=true&characterEncoding=utf8&noAccessToProcedureBodies=true&protocol=tcp',
+        'spring.datasource.driver-class-name=com.mysql.jdbc.Driver',
         'spring.data.rest.returnBodyOnCreate=true',
         'spring.data.rest.returnBodyOnupdate=true',
         'server.contextPath=/',
@@ -49,7 +49,7 @@ import static io.restassured.RestAssured.given
         'logging.level.org.springframework.security=DEBUG'])
 @Slf4j
 @Stepwise
-class ClientCredentialsPostgreSQLFlowSpecIT extends Specification {
+class ClientCredentialsFlowSpecIT extends Specification {
 
     @LocalServerPort
     int port
@@ -70,6 +70,5 @@ class ClientCredentialsPostgreSQLFlowSpecIT extends Specification {
 
         def body = response.as(Map)
         assert body.get('access_token') != null
-
     }
 }
