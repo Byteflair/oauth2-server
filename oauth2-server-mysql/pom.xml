@@ -13,6 +13,10 @@
     <groupId>${project.parent.groupId}</groupId>
     <version>${project.parent.version}</version>
 
+    <properties>
+        <start-class>com.byteflair.oauth.server.Oauth2ServerApp</start-class>
+    </properties>
+
     <build>
         <!--<finalName>${project.artifactId}-${project.version}</finalName>-->
         <plugins>
