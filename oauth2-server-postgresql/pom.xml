@@ -7,8 +7,7 @@
     <parent>
         <artifactId>oauth2-server</artifactId>
         <groupId>com.byteflair</groupId>
-        <version>0.1-SNAPSHOT</version>
-        <relativePath>../../oauth2-server/pom.xml</relativePath>
+        <version>0.1-RC</version>
     </parent>
 
 
@@ -95,7 +94,7 @@
         <dependency>
             <groupId>com.byteflair</groupId>
             <artifactId>oauth2-server-common</artifactId>
-            <version>0.1-SNAPSHOT</version>
+            <version>0.1-RC</version>
         </dependency>
     </dependencies>
 
