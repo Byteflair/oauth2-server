@@ -45,14 +45,28 @@ This property value is `false` by default excluding `dev` profile, where it's `t
 
 # Project setup
 
-This OAuth2 Server implementation uses JWT tokens. These tokens are signed with an RSA key pair. Before running the server you need to generate an RSA key pair in a key store.
+This OAuth2 Server implementation uses JWT tokens. These tokens are signed with an RSA key pair. Before running the server you need to generate an RSA key pair in a key store
+and configure it in the server overriding following properties:
+```
+- keystore.path
+- keystore.password
+- keystore.key.alias
+- keystore.key.password
+```
+
 
 The application is by default configured to use a keystore in `${project.build.path}`.
  
-You can generate an initialized key store for development and testing purposes using the following command: `mvn -Dspring.profiles.active=true keytool:generateKeyPair`
+You can generate an initialized key store for development and testing purposes using the following command: 
+```
+mvn -Dspring.profiles.active=true keytool:generateKeyPair
+```
 
 # Running the server
 
-After running the project setup, you can run the server with the following command: `mvn -Pdev -Dspring.profiles.active=true spring-boot:run`
+After running the project setup, you can run the server with the following command: 
+```
+mvn -Pdev -Dspring.profiles.active=true spring-boot:run
+```
  
  
